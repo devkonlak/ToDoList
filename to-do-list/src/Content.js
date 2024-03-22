@@ -32,18 +32,20 @@ const Content = () => {
       /* *Using the map function to iterate over the items array then checking if the id of the current task matches the provided id. If the id matches, creating a new task object with the checked property toggled to the opposite of its current value using !task.checked.If the id does not match, keeping the task object unchanged.*/
     }
     setItems(listItem);
+    localStorage.setItem("todo",JSON.stringify(listItem))
   };
 
   const handleDelete = (id) => {
       const delTask = items.filter( (task) => task.id !== id)
       setItems(delTask)
       {/**Filtering the items array to exclude the task with the provided ID */}
+      localStorage.setItem("todo",JSON.stringify(delTask))
 
   };
   return (
     <main>
+      {(items.length) ? (<ul>
       {/*using map to iterate the default items in unordered list */}
-      <ul>
         {items.map((task) => (
           <li className="item" key={task.id}>
             {/**With key={item.id}, each list item will be uniquely identified by its id. and also helps in controling states */}
@@ -54,7 +56,10 @@ const Content = () => {
                 task.checked
               } /*this will check the  weather the item is checked or not*/
             />
-            <label>{task.item}</label> {/**gathering lable from items  */}
+            <label 
+            style={(task.checked) ? {textDecoration:'line-through'} : null}>
+            {task.item}
+            </label> {/**gathering lable from items  || if the task.checked is true then the text-decoration ll be line-through */}
             <button aria-label="Delete">
               <FaTrashArrowUp
                 role="button"
@@ -65,7 +70,10 @@ const Content = () => {
             {/*<FaTrashArrowUp /> adds trash can icon Tabindex ll helps in focusing delete icon by keyboard navigation */}
           </li>
         ))}
-      </ul>
+      </ul>) : 
+      (<p> Your list is empty </p>) }
+      
+      
     </main>
   );
 };

@@ -53,7 +53,9 @@ function App() {
        handleDelete = {handleDelete}
        />
        {/** Sending the props to Content component */}
-      <Footer />
+      <Footer 
+      length = {items.length}
+      />
     </div>
   );
 }

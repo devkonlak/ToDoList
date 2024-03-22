@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Footer = () =>{
+const Footer = ({length}) =>{
     const year = new Date();
     return(
-        <footer>Copyright &copy; {year.getFullYear()}</footer>
-        /*getFullYear() is a method provided by JavaScript's Date object. */
+        <footer> {length} Tasks remaining</footer>
+        
     )
 }
 export default Footer; 

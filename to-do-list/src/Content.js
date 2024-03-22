@@ -26,9 +26,19 @@ const Content = () => {
 
   const handleCheck = (id) => {
     const listItem = items.map((task) =>
-      task.id === id ? {...task, checked:!task.checked} : task
-    ); {/* *Using the map function to iterate over the items array then checking if the id of the current task matches the provided id. If the id matches, creating a new task object with the checked property toggled to the opposite of its current value using !task.checked.If the id does not match, keeping the task object unchanged.*/}
+      task.id === id ? { ...task, checked: !task.checked } : task
+    );
+    {
+      /* *Using the map function to iterate over the items array then checking if the id of the current task matches the provided id. If the id matches, creating a new task object with the checked property toggled to the opposite of its current value using !task.checked.If the id does not match, keeping the task object unchanged.*/
+    }
     setItems(listItem);
+  };
+
+  const handleDelete = (id) => {
+      const delTask = items.filter( (task) => task.id !== id)
+      setItems(delTask)
+      {/**Filtering the items array to exclude the task with the provided ID */}
+
   };
   return (
     <main>
@@ -46,7 +56,11 @@ const Content = () => {
             />
             <label>{task.item}</label> {/**gathering lable from items  */}
             <button aria-label="Delete">
-              <FaTrashArrowUp role="button" tabIndex="0" />
+              <FaTrashArrowUp
+                role="button"
+                tabIndex="0"
+                onClick={() => handleDelete(task.id)}
+              />
             </button>
             {/*<FaTrashArrowUp /> adds trash can icon Tabindex ll helps in focusing delete icon by keyboard navigation */}
           </li>

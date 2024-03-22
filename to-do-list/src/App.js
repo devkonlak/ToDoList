@@ -25,7 +25,15 @@ function App() {
   {
     /*defining default items inside useState as array of objects*/
   }
-
+  const addTask = (item) => {
+    const id = items.length ? items[items.length -1] .id+1 : 1; //Calculating the ID for a new item based on the length of the 'items' array.
+    const addNewTask = {id,checked:false,item} // creating addNewTask object
+    const newListItems = [...items, addNewTask] // addNewTask is added to the rest of the items 
+    setItems(newListItems);
+    localStorage.setItem("todo", JSON.stringify(newListItems));
+  }
+  
+  const [newTask,setNewTask] = useState(' ')
   const handleCheck = (id) => {
     const listItem = items.map((task) =>
       task.id === id ? { ...task, checked: !task.checked } : task
@@ -45,10 +53,25 @@ function App() {
     }
     localStorage.setItem("todo", JSON.stringify(delTask));
   };
+  const handleSubmit = (e) => {
+   e.preventDefault() // Prevent the default form submission behavior
+   if(!newTask) return;// checks if the newTask state variable is empty. If it's empty, the function returns early, indicating that no action should be taken.
+   console.log(newTask)
+   //addTask
+   addTask(newTask)
+   setNewTask('')
+   // Clearing the 'newTask' state variable by setting it to an empty string
+  }
+
   return (
     <div className="App">
       <Header />
-      <Additem/>
+      <Additem
+      newTask = {newTask}
+      setNewTask = {setNewTask}
+      handleSubmit = {handleSubmit}
+
+      />
       <Content 
        items = {items}
        handleCheck = {handleCheck}

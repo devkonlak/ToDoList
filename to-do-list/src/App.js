@@ -5,9 +5,11 @@ import Header from "./Header";
 import { useState } from "react";
 import Additem from "./Additem";
 function App() {
-  const [items, setItems] = useState();
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem('todo')));
   {
-    /*defining default items inside useState as array of objects*/
+    /** localStorage.getItem('todo')Retrieves the value associated with the key 'todo' from local storage. 
+     * JSON.parse(...): Parses the retrieved value from local storage, converting it from a string to its JavaScript object representation.
+    */
   }
   const addTask = (item) => {
     const id = items.length ? items[items.length -1] .id+1 : 1; //Calculating the ID for a new item based on the length of the 'items' array.

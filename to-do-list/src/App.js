@@ -5,23 +5,7 @@ import Header from "./Header";
 import { useState } from "react";
 import Additem from "./Additem";
 function App() {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      checked: true,
-      item: "Wake up by 5",
-    },
-    {
-      id: 2,
-      checked: false,
-      item: "Practice Coding",
-    },
-    {
-      id: 3,
-      checked: false,
-      item: "Sleep by 10",
-    },
-  ]);
+  const [items, setItems] = useState();
   {
     /*defining default items inside useState as array of objects*/
   }

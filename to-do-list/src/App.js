@@ -5,14 +5,15 @@ import Header from "./Header";
 import { useState } from "react";
 import Additem from "./Additem";
 function App() {
-  const [items, setItems] = useState(JSON.parse(localStorage.getItem('todo')));
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem('todo')) || []);
   {
     /** localStorage.getItem('todo')Retrieves the value associated with the key 'todo' from local storage. 
      * JSON.parse(...): Parses the retrieved value from local storage, converting it from a string to its JavaScript object representation.
+     * || [] If the previous step (JSON.parse(...)) fails (because localStorage.getItem('todo') returned null or undefined), the entire expression evaluates to an empty array []. This ensures that the code always has an array to work with, even if no to-do items were previously stored.
     */
   }
   const addTask = (item) => {
-    const id = items.length ? items[items.length -1] .id+1 : 1; //Calculating the ID for a new item based on the length of the 'items' array.
+    const id = items.length ? items[items.length -1].id+1 : 1; //Calculating the ID for a new item based on the length of the 'items' array.
     const addNewTask = {id,checked:false,item} // creating addNewTask object
     const newListItems = [...items, addNewTask] // addNewTask is added to the rest of the items 
     setItems(newListItems);

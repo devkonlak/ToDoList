@@ -5,7 +5,7 @@ import { FaTrashArrowUp } from "react-icons/fa6";
 const Content = ({items,handleCheck,handleDelete}) => {
   
   return (
-    <main>
+    <>
       {/**if the items.length has value display list or display "list is empty" */}
       {(items.length) ? (<ul>
       {/*using map to iterate the default items in unordered list */}
@@ -37,7 +37,7 @@ const Content = ({items,handleCheck,handleDelete}) => {
       (<p> Your list is empty </p>) }
       
       
-    </main>
+    </>
   );
 };
 

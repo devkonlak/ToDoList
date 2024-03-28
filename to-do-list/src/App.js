@@ -8,31 +8,33 @@ function App() {
   const API_URL = "http://localhost:3500/items"; // {/** */}
   const [items, setItems] = useState([]);
   //{
-  /* while receving the data from API we dont need to fetch the localStorage.
+  /* while receving the data from API we dont need to fetch the  data from localStorage.
   /** localStorage.getItem('todo')Retrieves the value associated with the key 'todo' from local storage.
    * JSON.parse(...): Parses the retrieved value from local storage, converting it from a string to its JavaScript object representation.
    * || [] If the previous step (JSON.parse(...)) fails (because localStorage.getItem('todo') returned null or undefined), the entire expression evaluates to an empty array []. This ensures that the code always has an array to work with, even if no to-do items were previously stored.
    */
   // }
-
+  const [fetchError, setFetchError] = useState(null); // handling error using usestate
   useEffect(() => {
     //An asynchronous function to fetch items from an API.
     const fetchItems = async () => {
       try {
         //// Sending a GET request to the API URL
         const response = await fetch(API_URL);
+        if (!response.ok) throw Error("Data not received");
 
         const listTask = await response.json();
 
         setItems(listTask);
+        setFetchError(null); // incase of no error setting fetch error to null
       } catch (err) {
-        console.log(err.stack);
+        setFetchError(err.message); // in case of error display  error message
       }
     };
     (async () => await fetchItems())();
     //  {/*
-    //  *(async () => await fetchItems()): This is an anonymous arrow function defined using the async function expression. Inside this function, fetchItems() is awaited, making sure that the asynchronous operation completes before proceeding.
-    //  * (): This function expression is immediately invoked because it's followed by (). This means the function is executed immediately after its definition.
+    //  *(async () => await fetchItems()): is an anonymous arrow function defined using the async function expression. Inside this function, fetchItems() is awaited, making sure that the asynchronous operation completes before proceeding.
+    //  * ():  function expression is immediately invoked because it's followed by (). This means the function is executed immediately after its definition.
     //  */}
   }, []);
 
@@ -81,11 +83,14 @@ function App() {
         setNewTask={setNewTask}
         handleSubmit={handleSubmit}
       />
-      <Content
-        items={items}
-        handleCheck={handleCheck}
-        handleDelete={handleDelete}
-      />
+      <main>
+        {fetchError && <p>{`Error:${fetchError}`}</p>}  {/**in case of error the error message ll be rendered. if there is no error nothing ll render */}
+        <Content
+          items={items}
+          handleCheck={handleCheck}
+          handleDelete={handleDelete}
+        />
+      </main>
       {/** Sending the props to Content component */}
       <Footer length={items.length} />
     </div>

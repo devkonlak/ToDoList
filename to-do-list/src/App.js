@@ -4,31 +4,29 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { useState } from "react";
 import Additem from "./Additem";
+import apiRequest from "./ApiRequest";
 function App() {
-  const API_URL = "http://localhost:3500/items"; // {/** */}
+  const API_URL = "http://localhost:3500/items";
+  // {/** npx json-server -p 3500 -w data/db.json*/}
   const [items, setItems] = useState([]);
-  //{
-  /* while receving the data from API we dont need to fetch the  data from localStorage.
-  /** localStorage.getItem('todo')Retrieves the value associated with the key 'todo' from local storage.
-   * JSON.parse(...): Parses the retrieved value from local storage, converting it from a string to its JavaScript object representation.
-   * || [] If the previous step (JSON.parse(...)) fails (because localStorage.getItem('todo') returned null or undefined), the entire expression evaluates to an empty array []. This ensures that the code always has an array to work with, even if no to-do items were previously stored.
-   */
-  // }
-  const [fetchError, setFetchError] = useState(null); // handling error using usestate
+  const [fetchError, setFetchError] = useState(null); 
+  // handling error using usestate
   useEffect(() => {
-    //An asynchronous function to fetch items from an API.
+    // An asynchronous function to fetch items from an API.
     const fetchItems = async () => {
       try {
-        //// Sending a GET request to the API URL
+        // Sending a GET request to the API URL
         const response = await fetch(API_URL);
         if (!response.ok) throw Error("Data not received");
 
         const listTask = await response.json();
 
         setItems(listTask);
-        setFetchError(null); // incase of no error setting fetch error to null
+        setFetchError(null);
+        // incase of no error setting fetch error to null
       } catch (err) {
-        setFetchError(err.message); // in case of error display  error message
+        setFetchError(err.message);
+        // in case of error display  error message
       }
     };
     (async () => await fetchItems())();
@@ -38,13 +36,31 @@ function App() {
     //  */}
   }, []);
 
-  //{/** useEffect hook is being used to fetch items from an API when the component mounts, as indicated by the empty dependency array.*/}
+  //{/** UseEffect hook is being used to fetch items from an API when the component mounts, as indicated by the empty dependency array.*/}
 
-  const addTask = (item) => {
-    const id = items.length ? items[items.length - 1].id + 1 : 1; //Calculating the ID for a new item based on the length of the 'items' array.
-    const addNewTask = { id, checked: false, item }; // creating addNewTask object
-    const newListItems = [...items, addNewTask]; // addNewTask is added to the rest of the items
+  // AddTask function is async because await is used in result variable.
+  const addTask = async (item) => {
+    const id = items.length ? items[items.length - 1].id + 1 : 1;
+    // Calculating the ID for a new item based on the length of the 'items' array.
+    const addNewTask = { id, checked: false, item };
+    // Creating addNewTask object.
+    const newListItems = [...items, addNewTask];
+    // AddNewTask is added to the rest of the items.
     setItems(newListItems);
+
+    // Adding new task in server
+    const postOptions = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/JSON",
+      },
+      // We have to mention types
+      body: JSON.stringify(addNewTask),
+    };
+    const result = await apiRequest(API_URL, postOptions);
+    // Calling apiRequest function with parameters.
+    if (result) setFetchError(result);
+    // In case of no error default null value ll work or in case of error setFetchError for result variable is shown.
   };
 
   const [newTask, setNewTask] = useState(" ");
@@ -62,12 +78,14 @@ function App() {
     const delTask = items.filter((task) => task.id !== id);
     setItems(delTask);
     //{
-    /**Filtering the items array to exclude the task with the provided ID */
+    /**Filtering the items array to exclude the task with the provided ID.*/
     //}
   };
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    if (!newTask) return; // checks if the newTask state variable is empty. If it's empty, the function returns early, indicating that no action should be taken.
+    e.preventDefault();
+    // Prevent the default form submission behavior
+    if (!newTask) return;
+    // Checks if the newTask state variable is empty. If it's empty, the function returns early, indicating that no action should be taken.
 
     //addTask
     addTask(newTask);
@@ -84,7 +102,8 @@ function App() {
         handleSubmit={handleSubmit}
       />
       <main>
-        {fetchError && <p>{`Error:${fetchError}`}</p>}  {/**in case of error the error message ll be rendered. if there is no error nothing ll render */}
+        {fetchError && <p>{`Error:${fetchError}`}</p>}
+        {/**In case of error the error message ll be rendered. if there is no error nothing ll render */}
         <Content
           items={items}
           handleCheck={handleCheck}
@@ -96,5 +115,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

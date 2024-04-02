@@ -64,7 +64,7 @@ function App() {
   };
 
   const [newTask, setNewTask] = useState(" ");
-  const handleCheck = (id) => {
+  const handleCheck = async (id) => {
     const listItem = items.map((task) =>
       task.id === id ? { ...task, checked: !task.checked } : task
     );
@@ -72,14 +72,32 @@ function App() {
     /* *Using the map function to iterate over the items array then checking if the id of the current task matches the provided id. If the id matches, creating a new task object with the checked property toggled to the opposite of its current value using !task.checked.If the id does not match, keeping the task object unchanged.*/
     // }
     setItems(listItem);
+  const myItem = listItem.filter((item) => item.id === id);
+  const updateOptions = {
+    method:'PATCH',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({checked:myItem[0].checked})
+
+  }
+  const reqUrl = `${API_URL}/${id}`
+  const result  = await apiRequest(reqUrl,updateOptions)
+  if(result) setFetchError(result) 
   };
 
-  const handleDelete = (id) => {
+  const handleDelete =  async (id) => {
     const delTask = items.filter((task) => task.id !== id);
     setItems(delTask);
     //{
     /**Filtering the items array to exclude the task with the provided ID.*/
     //}
+    const deleteOptions = {method:'DELETE'}
+
+    const reqUrl = `${API_URL}/${id}`
+    const result = await apiRequest(reqUrl,deleteOptions)
+    if(result) fetchError(result)
+
   };
   const handleSubmit = (e) => {
     e.preventDefault();
